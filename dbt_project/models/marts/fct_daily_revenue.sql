@@ -1,6 +1,5 @@
--- NOTE: This model is intentionally simple. If the customer dimension has more
--- than one active row per customer, the join can inflate revenue without a SQL
--- error. Students should add tests/unit tests that expose this failure mode.
+-- Protected model: Deduplicates active customers before joining to prevent
+-- revenue inflation when customer dimension contains multiple active rows.
 
 with completed_orders as (
     select *
@@ -8,7 +7,7 @@ with completed_orders as (
     where status = 'completed'
 ),
 active_customers as (
-    select *
+    select distinct customer_id
     from {{ ref('stg_customers') }}
     where is_active = true
 )

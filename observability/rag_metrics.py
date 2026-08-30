@@ -8,7 +8,7 @@ from observability.anomaly import zscore_detector
 
 
 def approximate_token_lengths(texts: Iterable[str]) -> list[int]:
-    # Deliberately simple proxy; no tokenizer/model download needed.
+    # Token proxy: word count approximation
     return [len(str(t).split()) for t in texts]
 
 
@@ -27,11 +27,24 @@ def detect_text_length_shift(
 
 
 def detect_embedding_norm_shift(
-    current_norms: Iterable[float], baseline_norms: Iterable[float]
+    current_norms: Iterable[float],
+    baseline_norms: Iterable[float],
+    *,
+    threshold: float = 3.0,
 ) -> dict[str, Any]:
-    """TODO(student): implement embedding-space drift signal.
+    """Embedding-space norm drift detection."""
+    cur = np.asarray(list(current_norms), dtype=float)
+    base = np.asarray(list(baseline_norms), dtype=float)
+    if cur.size == 0 or base.size == 0:
+        return {
+            "is_anomaly": False,
+            "score": 0.0,
+            "method": "embedding_norm_zscore",
+            "reason": "empty_input",
+        }
 
-    No embedding model is required for the starter lab. Hidden evaluation can
-    feed precomputed norms/similarities through this stable interface.
-    """
-    return {"is_anomaly": False, "score": 0.0, "method": "not_implemented"}
+    cur_mean = float(np.mean(cur))
+    result = zscore_detector(cur_mean, base, threshold=threshold)
+    result["metric"] = "embedding_norm_mean"
+    result["current_mean"] = cur_mean
+    return result

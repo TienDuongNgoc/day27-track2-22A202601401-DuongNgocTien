@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-08-30T15:06:52.663264+00:00",
+  "orders_rows": 600,
+  "failed_contract_checks": 0,
+  "critical_contract_failures": 0,
+  "row_count_anomaly": {
+    "is_anomaly": true,
+    "score": 29.977592206225612,
+    "method": "auto:context_aware",
+    "reason": "median=262.000, mad=10.000, threshold=3.0; context=True"
+  },
+  "freshness_minutes": 5.043441283333333,
+  "kb_documents_count": 5,
+  "kb_failed_contract_checks": 0,
+  "kb_freshness_minutes": 10.0,
+  "kb_text_length_signal": {
+    "is_anomaly": false,
+    "score": 0.7547940916996035,
+    "method": "zscore",
+    "reason": "mean=14.834, std=1.015, threshold=3.0",
+    "metric": "mean_text_length",
+    "current_mean": 15.6
+  },
+  "contract_slo": {
+    "target": 0.999,
+    "actual_bad_rate": 0.0,
+    "allowed_bad_rate": 0.0010000000000000009,
+    "burn_rate": 0.0,
+    "remaining_error_budget_fraction": 1.0,
+    "breached": false
+  },
+  "rag_slo": {
+    "target": 0.99,
+    "actual_bad_rate": 0.0,
+    "allowed_bad_rate": 0.010000000000000009,
+    "burn_rate": 0.0,
+    "remaining_error_budget_fraction": 1.0,
+    "breached": false
+  },
+  "burn_evaluation": {
+    "page": false,
+    "severity": "info",
+    "reason": "healthy_within_error_budget",
+    "short_window_burn": 0.0,
+    "long_window_burn": 0.0,
+    "policy": "sre_multiwindow"
+  },
+  "sample_blast_radius_from_stg_orders": [
+    "fct_daily_revenue",
+    "ceo_revenue_dashboard"
+  ]
+}

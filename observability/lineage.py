@@ -30,18 +30,24 @@ def get_downstream_assets(graph: dict[str, list[str]], start: str) -> list[str]:
 def get_column_downstream(
     column_graph: dict[str, list[str]], start_column: str
 ) -> list[str]:
-    """TODO(student): implement column-level traversal.
-
-    Starter returns only direct children, so transitive hidden cases will fail.
-    """
-    return list(column_graph.get(start_column, []))
+    """Return transitive downstream columns in BFS order, excluding start."""
+    seen = {start_column}
+    q: deque[str] = deque([start_column])
+    out: list[str] = []
+    while q:
+        node = q.popleft()
+        for child in column_graph.get(node, []):
+            if child not in seen:
+                seen.add(child)
+                out.append(child)
+                q.append(child)
+    return out
 
 
 def extract_dbt_dataset_graph(manifest_path: str | Path) -> dict[str, list[str]]:
-    """Minimal dbt manifest parser.
+    """dbt manifest parser.
 
-    It maps each dbt node unique_id to the nodes that depend on it. Students may
-    enrich names, exposures, owners, columns, or OpenLineage facets.
+    Maps each dbt node/source unique_id to the downstream nodes that depend on it.
     """
     path = Path(manifest_path)
     if not path.exists():
